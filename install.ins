@@ -1,0 +1,28 @@
+[Initial]
+Message=Installing Autodesk Fusion 360...
+DefVar $ExitCode$
+
+[Actions]
+ShowBitmap "%ScriptPath%\logo.png" "Autodesk Fusion 360"
+Files_Copy
+WinBatch_Setup
+Sub_HandleExitCode
+Files_Cleanup
+
+[Files_Copy]
+copy -se "%ScriptPath%\data\*" "%opsiTmpDir%\%installingProdName%\"
+
+[WinBatch_Setup]
+"%opsiTmpDir%\%installingProdName%\Fusion 360 Admin Install.exe" --quiet
+
+[Sub_HandleExitCode]
+; check return code
+Set $ExitCode$ = GetLastExitCode
+comment "GetLastExitCode: " + $ExitCode$
+if not($ExitCode$ = "0")
+  LogError "Fatal: setup returned exit code " + $ExitCode$
+  IsFatalError
+endif
+
+[Files_Cleanup]
+delete -sf "%opsiTmpDir%\%installingProdName%\"

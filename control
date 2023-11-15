@@ -1,0 +1,10 @@
+[Product]
+type: localboot
+id: fusion-360
+name: Fusion 360
+description: Autodesk Fusion 360 CAD-Software
+advice: In order to use this software you need to have an Autodesk account.
+version: 1.0
+packageVersion: 1.0
+setupScript: install.ins
+uninstallScript: remove.ins

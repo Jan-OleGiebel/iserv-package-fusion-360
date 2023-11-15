@@ -1,0 +1,33 @@
+[Initial]
+Message=Deinstalling Autodesk Fusion 360...
+DefVar $ExitCode$
+
+[Actions]
+ShowBitmap "%ScriptPath%\logo.png" "Autodesk Fusion 360"
+Sub_Uninstall
+
+[Sub_Uninstall]
+if DirectoryExists("%ProgramFilesSysnativeDir%\Autodesk\webdeploy")
+    Files_Copy
+    WinBatch_Uninstall
+    Sub_HandleExitCode
+    Files_Cleanup
+endif
+
+[Files_Copy]
+copy -se "%ScriptPath%\data\*" "%opsiTmpDir%\%installingProdName%\"
+
+[WinBatch_Uninstall]
+"%opsiTmpDir%\%installingProdName%\Fusion 360 Admin Install.exe" --process uninstall --quiet
+
+[Sub_HandleExitCode]
+; check return code
+Set $ExitCode$ = GetLastExitCode
+comment "GetLastExitCode: " + $ExitCode$
+if not($ExitCode$ = "0")
+  LogError "Fatal: setup returned exit code " + $ExitCode$
+  IsFatalError
+endif
+
+[Files_Cleanup]
+delete -sf "%opsiTmpDir%\%installingProdName%\"
